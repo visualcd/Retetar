@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App & Navigation -->
+    <string name="app_name">Rețetar</string>
+    <string name="nav_recipes">Recipes</string>
+    <string name="nav_planner">Meal plan</string>
+    <string name="nav_shopping">Shopping</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Common Actions & Labels -->
+    <string name="action_back">Back</string>
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_add">Add</string>
+    <string name="action_close">Close</string>
+    <string name="action_retry">Retry</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_copy">Copy</string>
+    <string name="action_confirm">Confirm</string>
+    <string name="action_move_up">Move up</string>
+    <string name="action_move_down">Move down</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_decrease_servings">Decrease servings</string>
+    <string name="action_increase_servings">Increase servings</string>
+    <string name="action_toggle_favorite">Toggle favorite</string>
+    <string name="action_dismiss_error">Dismiss error</string>
+    <string name="loading">Loading…</string>
+    <string name="servings_count">%1$d servings</string>
+    <string name="minutes_short">%1$d min</string>
+    <string name="error_generic">Something went wrong. Please try again.</string>
+
+    <!-- Units -->
+    <string name="unit_g">g</string>
+    <string name="unit_kg">kg</string>
+    <string name="unit_oz">oz</string>
+    <string name="unit_lb">lb</string>
+    <string name="unit_ml">ml</string>
+    <string name="unit_l">l</string>
+    <string name="unit_tsp">tsp</string>
+    <string name="unit_tbsp">tbsp</string>
+    <string name="unit_cup">cup</string>
+    <string name="unit_piece">pcs</string>
+    <string name="unit_pinch">pinch</string>
+    <string name="unit_to_taste">to taste</string>
+
+    <!-- Aisles -->
+    <string name="aisle_produce">Produce</string>
+    <string name="aisle_meat_fish">Meat &amp; Fish</string>
+    <string name="aisle_dairy">Dairy</string>
+    <string name="aisle_bakery">Bakery</string>
+    <string name="aisle_pantry">Pantry</string>
+    <string name="aisle_spices">Spices</string>
+    <string name="aisle_frozen">Frozen</string>
+    <string name="aisle_other">Other</string>
+
+    <!-- Meal Slots -->
+    <string name="slot_breakfast">Breakfast</string>
+    <string name="slot_lunch">Lunch</string>
+    <string name="slot_dinner">Dinner</string>
+    <string name="slot_snack">Snack</string>
+
+    <!-- Weekdays -->
+    <string name="day_mon">Mon</string>
+    <string name="day_tue">Tue</string>
+    <string name="day_wed">Wed</string>
+    <string name="day_thu">Thu</string>
+    <string name="day_fri">Fri</string>
+    <string name="day_sat">Sat</string>
+    <string name="day_sun">Sun</string>
+    <string name="day_monday_full">Monday</string>
+    <string name="day_tuesday_full">Tuesday</string>
+    <string name="day_wednesday_full">Wednesday</string>
+    <string name="day_thursday_full">Thursday</string>
+    <string name="day_friday_full">Friday</string>
+    <string name="day_saturday_full">Saturday</string>
+    <string name="day_sunday_full">Sunday</string>
+
+    <!-- Recipes List Screen -->
+    <string name="recipes_title">Recipes</string>
+    <string name="recipes_search_placeholder">Search by title or ingredient…</string>
+    <string name="recipes_new">New recipe</string>
+    <string name="recipes_filter_favorites">Favorites</string>
+    <string name="recipes_filter_time_all">Any time</string>
+    <string name="recipes_filter_time_15">≤ 15 min</string>
+    <string name="recipes_filter_time_30">≤ 30 min</string>
+    <string name="recipes_filter_time_60">≤ 60 min</string>
+    <string name="recipes_clear_filters">Clear filters</string>
+    <string name="recipes_empty_title">No recipes yet</string>
+    <string name="recipes_empty_subtitle">Create your first recipe or load the demo recipes from Settings.</string>
+    <string name="recipes_no_matches_title">No matching recipes</string>
+    <string name="recipes_no_matches_subtitle">Try adjusting the search text or active filters.</string>
+
+    <!-- Recipe Detail Screen -->
+    <string name="detail_title">Recipe</string>
+    <string name="detail_servings">Servings</string>
+    <string name="detail_prep_time">Prep: %1$d min</string>
+    <string name="detail_cook_time">Cook: %1$d min</string>
+    <string name="detail_total_time">Total: %1$d min</string>
+    <string name="detail_ingredients">Ingredients</string>
+    <string name="detail_steps">Steps</string>
+    <string name="detail_notes">Notes</string>
+    <string name="detail_add_to_plan">Add to plan</string>
+    <string name="detail_add_to_plan_title">Add to meal plan</string>
+    <string name="detail_add_to_plan_success">Added to meal plan</string>
+    <string name="detail_not_found_title">Recipe not found</string>
+    <string name="detail_not_found_subtitle">This recipe may have been deleted.</string>
+    <string name="detail_delete_title">Delete recipe?</string>
+    <string name="detail_delete_message">Are you sure you want to delete \"%1$s\"?</string>
+    <string name="detail_delete_message_with_plan">Are you sure you want to delete \"%1$s\"? This will also remove %2$d scheduled meal plan entries.</string>
+    <string name="detail_date_label">Day</string>
+    <string name="detail_slot_label">Meal slot</string>
+
+    <!-- Recipe Editor Screen -->
+    <string name="editor_new_title">New recipe</string>
+    <string name="editor_edit_title">Edit recipe</string>
+    <string name="editor_field_title">Title</string>
+    <string name="editor_field_description">Description</string>
+    <string name="editor_field_servings">Base servings (1–100)</string>
+    <string name="editor_field_prep_minutes">Prep time (min)</string>
+    <string name="editor_field_cook_minutes">Cook time (min)</string>
+    <string name="editor_field_notes">Notes</string>
+    <string name="editor_section_ingredients">Ingredients</string>
+    <string name="editor_add_ingredient">Add ingredient</string>
+    <string name="editor_ingredient_name">Ingredient name</string>
+    <string name="editor_ingredient_quantity">Quantity</string>
+    <string name="editor_ingredient_unit">Unit</string>
+    <string name="editor_ingredient_aisle">Aisle</string>
+    <string name="editor_section_steps">Preparation steps</string>
+    <string name="editor_add_step">Add step</string>
+    <string name="editor_step_placeholder">Step %1$d instructions</string>
+    <string name="editor_section_tags">Tags</string>
+    <string name="editor_tag_placeholder">Add tag…</string>
+    <string name="editor_add_tag">Add tag</string>
+
+    <!-- Validation Messages -->
+    <string name="validation_title_blank">Title is required.</string>
+    <string name="validation_title_too_long">Title must be at most %1$d characters.</string>
+    <string name="validation_servings_invalid">Servings must be between %1$d and %2$d.</string>
+    <string name="validation_prep_invalid">Prep time must be between %1$d and %2$d minutes.</string>
+    <string name="validation_cook_invalid">Cook time must be between %1$d and %2$d minutes.</string>
+    <string name="validation_empty_ingredients">Add at least one ingredient.</string>
+    <string name="validation_ingredient_name_blank">Ingredient #%1$d needs a name.</string>
+    <string name="validation_ingredient_qty_invalid">Ingredient #%1$d needs a quantity greater than 0.</string>
+    <string name="validation_ingredient_to_taste_qty">Ingredient #%1$d is \"to taste\" and must not have a quantity.</string>
+    <string name="validation_empty_steps">Add at least one preparation step.</string>
+    <string name="validation_step_text_blank">Step #%1$d cannot be empty.</string>
+
+    <!-- Weekly Planner Screen -->
+    <string name="planner_title">Meal plan</string>
+    <string name="planner_week_label">Week %1$d · %2$s – %3$s</string>
+    <string name="planner_prev_week">Previous week</string>
+    <string name="planner_next_week">Next week</string>
+    <string name="planner_today">This week</string>
+    <string name="planner_repeat_week">Repeat previous week</string>
+    <string name="planner_copy_day">Copy day</string>
+    <string name="planner_copy_day_title">Copy day</string>
+    <string name="planner_copy_from">From day</string>
+    <string name="planner_copy_to">To day</string>
+    <string name="planner_add_to_slot">Add recipe to %1$s</string>
+    <string name="planner_edit_servings_title">Change servings</string>
+    <string name="planner_empty_slot">No meals planned</string>
+    <string name="planner_repeat_empty">Previous week has no entries to copy.</string>
+    <string name="planner_repeat_done">Copied %1$d entries from previous week.</string>
+    <string name="planner_copy_same_day">Source and target day are the same.</string>
+    <string name="planner_copy_empty">Selected source day has no entries.</string>
+    <string name="planner_copy_done">Copied %1$d entries.</string>
+    <string name="planner_generate_shopping">Generate shopping list</string>
+
+    <!-- Recipe Picker Screen -->
+    <string name="picker_title">Pick a recipe</string>
+    <string name="picker_subtitle">%1$s · %2$s</string>
+    <string name="picker_search_placeholder">Search recipes…</string>
+    <string name="picker_servings_label">Servings</string>
+    <string name="picker_add_confirm">Add to meal</string>
+    <string name="picker_empty_title">No recipes available</string>
+    <string name="picker_empty_subtitle">Create a recipe first or adjust your search.</string>
+
+    <!-- Shopping List Screen -->
+    <string name="shopping_title">Shopping list</string>
+    <string name="shopping_regenerate">Regenerate</string>
+    <string name="shopping_add_manual">Add item</string>
+    <string name="shopping_clear_checked">Clear checked</string>
+    <string name="shopping_copy_list">Copy as text</string>
+    <string name="shopping_copied">Shopping list copied.</string>
+    <string name="shopping_regenerated">Shopping list updated from meal plan.</string>
+    <string name="shopping_manual_badge">Manual</string>
+    <string name="shopping_empty_title">Shopping list is empty</string>
+    <string name="shopping_empty_subtitle">Plan meals for this week and tap Regenerate, or add items manually.</string>
+    <string name="shopping_add_dialog_title">Add manual item</string>
+    <string name="shopping_item_name">Item name</string>
+    <string name="shopping_item_quantity_optional">Quantity (optional)</string>
+    <string name="shopping_clear_confirm_title">Clear checked items?</string>
+    <string name="shopping_clear_confirm_message">Remove %1$d checked items from this week\'s shopping list?</string>
+    <string name="shopping_error_name_blank">Item name is required.</string>
+    <string name="shopping_error_name_too_long">Item name is too long (max %1$d characters).</string>
+    <string name="shopping_error_invalid_quantity">Enter a valid quantity greater than 0 (leave blank for \"to taste\").</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_appearance">Appearance &amp; units</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_ro">Română</string>
+    <string name="settings_language_en">English</string>
+    <string name="settings_units">Unit system</string>
+    <string name="settings_units_metric">Metric (g, kg, ml, l)</string>
+    <string name="settings_units_imperial">Imperial (oz, lb, cup)</string>
+    <string name="settings_section_demo">Demo data</string>
+    <string name="settings_demo_description">Load 10 Romanian sample recipes to explore search, scaling, meal planning, and shopping-list aggregation.</string>
+    <string name="settings_demo_load">Load demo recipes</string>
+    <string name="settings_demo_clear">Delete demo recipes</string>
+    <string name="settings_demo_loaded_msg">Loaded %1$d demo recipes.</string>
+    <string name="settings_demo_cleared_msg">Removed demo recipes.</string>
+    <string name="settings_demo_clear_confirm_title">Delete demo recipes?</string>
+    <string name="settings_demo_clear_confirm_message">This removes the sample recipes and any meal plan entries using them. Your own recipes stay untouched.</string>
+    <string name="settings_section_import_export">Import / Export JSON</string>
+    <string name="settings_export_all">Export all recipes</string>
+    <string name="settings_export_selected">Export selected (%1$d)</string>
+    <string name="settings_export_select_toggle">Choose recipes</string>
+    <string name="settings_export_copy">Copy JSON</string>
+    <string name="settings_export_copied">JSON copied.</string>
+    <string name="settings_export_empty">Exported 0 recipes.</string>
+    <string name="settings_export_ready">Exported %1$d recipes (schema v%2$d).</string>
+    <string name="settings_import_label">Paste recipes JSON</string>
+    <string name="settings_import_placeholder">{"schemaVersion": 1, "exportedAt": ..., "recipes": [...]}</string>
+    <string name="settings_import_policy">Duplicate handling</string>
+    <string name="settings_import_policy_skip">Skip duplicates</string>
+    <string name="settings_import_policy_keep_both">Keep both</string>
+    <string name="settings_import_action">Import JSON</string>
+    <string name="settings_import_success">Imported %1$d recipes (skipped %2$d, copies %3$d).</string>
+    <string name="settings_import_error_json">Invalid JSON format: %1$s</string>
+    <string name="settings_import_error_version">Unsupported schemaVersion %1$d (supported: %2$d).</string>
+    <string name="settings_import_error_validation">Import rejected: %1$d validation errors found. Nothing was saved.</string>
+</resources>

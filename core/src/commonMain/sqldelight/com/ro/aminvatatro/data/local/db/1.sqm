@@ -1,0 +1,3 @@
+-- Migration 1 -> 2: add indexes supporting diacritic-insensitive search on title and ingredient names
+CREATE INDEX idx_recipe_normalized_title ON Recipe(normalizedTitle);
+CREATE INDEX idx_ingredient_normalized_name ON RecipeIngredient(normalizedName);

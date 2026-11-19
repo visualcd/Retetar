@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Aplicație și navigare -->
+    <string name="app_name">Rețetar</string>
+    <string name="nav_recipes">Rețete</string>
+    <string name="nav_planner">Plan</string>
+    <string name="nav_shopping">Listă</string>
+    <string name="nav_settings">Setări</string>
+
+    <!-- Acțiuni și etichete comune -->
+    <string name="action_back">Înapoi</string>
+    <string name="action_save">Salvează</string>
+    <string name="action_cancel">Anulează</string>
+    <string name="action_delete">Șterge</string>
+    <string name="action_edit">Editează</string>
+    <string name="action_add">Adaugă</string>
+    <string name="action_close">Închide</string>
+    <string name="action_retry">Reîncearcă</string>
+    <string name="action_clear">Golește</string>
+    <string name="action_copy">Copiază</string>
+    <string name="action_confirm">Confirmă</string>
+    <string name="action_move_up">Mută sus</string>
+    <string name="action_move_down">Mută jos</string>
+    <string name="action_remove">Elimină</string>
+    <string name="action_decrease_servings">Scade porțiile</string>
+    <string name="action_increase_servings">Crește porțiile</string>
+    <string name="action_toggle_favorite">Comută favorit</string>
+    <string name="action_dismiss_error">Închide eroarea</string>
+    <string name="loading">Se încarcă…</string>
+    <string name="servings_count">%1$d porții</string>
+    <string name="minutes_short">%1$d min</string>
+    <string name="error_generic">A apărut o eroare. Încearcă din nou.</string>
+
+    <!-- Unități -->
+    <string name="unit_g">g</string>
+    <string name="unit_kg">kg</string>
+    <string name="unit_oz">oz</string>
+    <string name="unit_lb">lb</string>
+    <string name="unit_ml">ml</string>
+    <string name="unit_l">l</string>
+    <string name="unit_tsp">linguriță</string>
+    <string name="unit_tbsp">lingură</string>
+    <string name="unit_cup">cană</string>
+    <string name="unit_piece">buc</string>
+    <string name="unit_pinch">praf</string>
+    <string name="unit_to_taste">după gust</string>
+
+    <!-- Raioane -->
+    <string name="aisle_produce">Legume și fructe</string>
+    <string name="aisle_meat_fish">Carne și pește</string>
+    <string name="aisle_dairy">Lactate și ouă</string>
+    <string name="aisle_bakery">Brutărie</string>
+    <string name="aisle_pantry">Cămară</string>
+    <string name="aisle_spices">Condimente</string>
+    <string name="aisle_frozen">Congelate</string>
+    <string name="aisle_other">Altele</string>
+
+    <!-- Mesele zilei -->
+    <string name="slot_breakfast">Mic dejun</string>
+    <string name="slot_lunch">Prânz</string>
+    <string name="slot_dinner">Cină</string>
+    <string name="slot_snack">Gustare</string>
+
+    <!-- Zilele săptămânii -->
+    <string name="day_mon">Lun</string>
+    <string name="day_tue">Mar</string>
+    <string name="day_wed">Mie</string>
+    <string name="day_thu">Joi</string>
+    <string name="day_fri">Vin</string>
+    <string name="day_sat">Sâm</string>
+    <string name="day_sun">Dum</string>
+    <string name="day_monday_full">Luni</string>
+    <string name="day_tuesday_full">Marți</string>
+    <string name="day_wednesday_full">Miercuri</string>
+    <string name="day_thursday_full">Joi</string>
+    <string name="day_friday_full">Vineri</string>
+    <string name="day_saturday_full">Sâmbătă</string>
+    <string name="day_sunday_full">Duminică</string>
+
+    <!-- Ecran listă rețete -->
+    <string name="recipes_title">Rețete</string>
+    <string name="recipes_search_placeholder">Caută după titlu sau ingredient…</string>
+    <string name="recipes_new">Rețetă nouă</string>
+    <string name="recipes_filter_favorites">Favorite</string>
+    <string name="recipes_filter_time_all">Orice timp</string>
+    <string name="recipes_filter_time_15">≤ 15 min</string>
+    <string name="recipes_filter_time_30">≤ 30 min</string>
+    <string name="recipes_filter_time_60">≤ 60 min</string>
+    <string name="recipes_clear_filters">Resetează filtrele</string>
+    <string name="recipes_empty_title">Nu ai rețete încă</string>
+    <string name="recipes_empty_subtitle">Creează prima rețetă sau încarcă rețetele demo din Setări.</string>
+    <string name="recipes_no_matches_title">Nicio rețetă găsită</string>
+    <string name="recipes_no_matches_subtitle">Încearcă un alt termen de căutare sau elimină din filtre.</string>
+
+    <!-- Ecran detaliu rețetă -->
+    <string name="detail_title">Detaliu rețetă</string>
+    <string name="detail_servings">Porții</string>
+    <string name="detail_prep_time">Pregătire: %1$d min</string>
+    <string name="detail_cook_time">Gătire: %1$d min</string>
+    <string name="detail_total_time">Total: %1$d min</string>
+    <string name="detail_ingredients">Ingrediente</string>
+    <string name="detail_steps">Pași de preparare</string>
+    <string name="detail_notes">Note</string>
+    <string name="detail_add_to_plan">Adaugă în plan</string>
+    <string name="detail_add_to_plan_title">Adaugă în planul săptămânal</string>
+    <string name="detail_add_to_plan_success">Adăugată în plan</string>
+    <string name="detail_not_found_title">Rețeta nu a fost găsită</string>
+    <string name="detail_not_found_subtitle">Este posibil ca rețeta să fi fost ștearsă.</string>
+    <string name="detail_delete_title">Ștergi rețeta?</string>
+    <string name="detail_delete_message">Sigur vrei să ștergi „%1$s”?</string>
+    <string name="detail_delete_message_with_plan">Sigur vrei să ștergi „%1$s”? Vor fi șterse și %2$d intrări asociate din planul săptămânal.</string>
+    <string name="detail_date_label">Ziua</string>
+    <string name="detail_slot_label">Masa</string>
+
+    <!-- Ecran editor rețetă -->
+    <string name="editor_new_title">Rețetă nouă</string>
+    <string name="editor_edit_title">Editează rețeta</string>
+    <string name="editor_field_title">Titlu</string>
+    <string name="editor_field_description">Descriere</string>
+    <string name="editor_field_servings">Porții de bază (1–100)</string>
+    <string name="editor_field_prep_minutes">Pregătire (min)</string>
+    <string name="editor_field_cook_minutes">Gătire (min)</string>
+    <string name="editor_field_notes">Note</string>
+    <string name="editor_section_ingredients">Ingrediente</string>
+    <string name="editor_add_ingredient">Adaugă ingredient</string>
+    <string name="editor_ingredient_name">Nume ingredient</string>
+    <string name="editor_ingredient_quantity">Cantitate</string>
+    <string name="editor_ingredient_unit">Unitate</string>
+    <string name="editor_ingredient_aisle">Raion</string>
+    <string name="editor_section_steps">Pași de preparare</string>
+    <string name="editor_add_step">Adaugă pas</string>
+    <string name="editor_step_placeholder">Instrucțiuni pas %1$d</string>
+    <string name="editor_section_tags">Etichete</string>
+    <string name="editor_tag_placeholder">Adaugă etichetă…</string>
+    <string name="editor_add_tag">Adaugă etichetă</string>
+
+    <!-- Mesaje de validare -->
+    <string name="validation_title_blank">Titlul este obligatoriu.</string>
+    <string name="validation_title_too_long">Titlul poate avea cel mult %1$d caractere.</string>
+    <string name="validation_servings_invalid">Porțiile trebuie să fie între %1$d și %2$d.</string>
+    <string name="validation_prep_invalid">Timpul de pregătire trebuie să fie între %1$d și %2$d minute.</string>
+    <string name="validation_cook_invalid">Timpul de gătire trebuie să fie între %1$d și %2$d minute.</string>
+    <string name="validation_empty_ingredients">Adaugă cel puțin un ingredient.</string>
+    <string name="validation_ingredient_name_blank">Ingredientul #%1$d trebuie să aibă un nume.</string>
+    <string name="validation_ingredient_qty_invalid">Ingredientul #%1$d trebuie să aibă o cantitate mai mare ca 0.</string>
+    <string name="validation_ingredient_to_taste_qty">Ingredientul #%1$d este „după gust” și nu trebuie să aibă cantitate.</string>
+    <string name="validation_empty_steps">Adaugă cel puțin un pas de preparare.</string>
+    <string name="validation_step_text_blank">Pasul #%1$d nu poate fi gol.</string>
+
+    <!-- Ecran plan săptămânal -->
+    <string name="planner_title">Plan săptămânal</string>
+    <string name="planner_week_label">Săpt. %1$d · %2$s – %3$s</string>
+    <string name="planner_prev_week">Săptămâna anterioară</string>
+    <string name="planner_next_week">Săptămâna următoare</string>
+    <string name="planner_today">Săptămâna curentă</string>
+    <string name="planner_repeat_week">Repetă săptămâna anterioară</string>
+    <string name="planner_copy_day">Copiază ziua</string>
+    <string name="planner_copy_day_title">Copiază ziua</string>
+    <string name="planner_copy_from">Din ziua</string>
+    <string name="planner_copy_to">În ziua</string>
+    <string name="planner_add_to_slot">Adaugă rețetă la %1$s</string>
+    <string name="planner_edit_servings_title">Schimbă porțiile</string>
+    <string name="planner_empty_slot">Nicio masă planificată</string>
+    <string name="planner_repeat_empty">Săptămâna anterioară nu are intrări de copiat.</string>
+    <string name="planner_repeat_done">S-au copiat %1$d intrări din săptămâna anterioară.</string>
+    <string name="planner_copy_same_day">Ziua sursă și ziua destinație sunt identice.</string>
+    <string name="planner_copy_empty">Ziua sursă nu are nicio intrare.</string>
+    <string name="planner_copy_done">S-au copiat %1$d intrări.</string>
+    <string name="planner_generate_shopping">Generează lista</string>
+
+    <!-- Ecran selector rețetă -->
+    <string name="picker_title">Alege o rețetă</string>
+    <string name="picker_subtitle">%1$s · %2$s</string>
+    <string name="picker_search_placeholder">Caută rețete…</string>
+    <string name="picker_servings_label">Porții</string>
+    <string name="picker_add_confirm">Adaugă la masă</string>
+    <string name="picker_empty_title">Nicio rețetă disponibilă</string>
+    <string name="picker_empty_subtitle">Creează întâi o rețetă sau ajustează căutarea.</string>
+
+    <!-- Ecran listă de cumpărături -->
+    <string name="shopping_title">Listă de cumpărături</string>
+    <string name="shopping_regenerate">Regenerează</string>
+    <string name="shopping_add_manual">Articol manual</string>
+    <string name="shopping_clear_checked">Șterge bifatele</string>
+    <string name="shopping_copy_list">Copiază ca text</string>
+    <string name="shopping_copied">Lista a fost copiată.</string>
+    <string name="shopping_regenerated">Lista a fost actualizată din plan.</string>
+    <string name="shopping_manual_badge">Manual</string>
+    <string name="shopping_empty_title">Lista de cumpărături este goală</string>
+    <string name="shopping_empty_subtitle">Planifică mese pentru această săptămână și apasă Regenerează, sau adaugă articole manual.</string>
+    <string name="shopping_add_dialog_title">Adaugă articol manual</string>
+    <string name="shopping_item_name">Nume articol</string>
+    <string name="shopping_item_quantity_optional">Cantitate (opțional)</string>
+    <string name="shopping_clear_confirm_title">Ștergi articolele bifate?</string>
+    <string name="shopping_clear_confirm_message">Elimini %1$d articole bifate din lista acestei săptămâni?</string>
+    <string name="shopping_error_name_blank">Numele articolului este obligatoriu.</string>
+    <string name="shopping_error_name_too_long">Numele articolului este prea lung (maxim %1$d caractere).</string>
+    <string name="shopping_error_invalid_quantity">Introdu o cantitate validă mai mare ca 0 (lasă gol pentru „după gust”).</string>
+
+    <!-- Ecran setări -->
+    <string name="settings_title">Setări</string>
+    <string name="settings_section_appearance">Aspect și unități</string>
+    <string name="settings_theme">Temă</string>
+    <string name="settings_theme_system">Sistem</string>
+    <string name="settings_theme_light">Luminoasă</string>
+    <string name="settings_theme_dark">Întunecată</string>
+    <string name="settings_language">Limbă</string>
+    <string name="settings_language_ro">Română</string>
+    <string name="settings_language_en">Engleză</string>
+    <string name="settings_units">Sistem de unități</string>
+    <string name="settings_units_metric">Metric (g, kg, ml, l)</string>
+    <string name="settings_units_imperial">Imperial (oz, lb, cană)</string>
+    <string name="settings_section_demo">Date demo</string>
+    <string name="settings_demo_description">Încarcă 10 rețete demo în română pentru a testa căutarea, scalarea, planificatorul și agregarea listei.</string>
+    <string name="settings_demo_load">Încarcă date demo</string>
+    <string name="settings_demo_clear">Șterge datele demo</string>
+    <string name="settings_demo_loaded_msg">S-au încărcat %1$d rețete demo.</string>
+    <string name="settings_demo_cleared_msg">Rețetele demo au fost șterse.</string>
+    <string name="settings_demo_clear_confirm_title">Ștergi rețetele demo?</string>
+    <string name="settings_demo_clear_confirm_message">Vor fi șterse rețetele demo și intrările de plan asociate lor. Rețetele tale rămân neatinse.</string>
+    <string name="settings_section_import_export">Import / Export JSON</string>
+    <string name="settings_export_all">Exportă toate rețetele</string>
+    <string name="settings_export_selected">Exportă selectatele (%1$d)</string>
+    <string name="settings_export_select_toggle">Alege rețete</string>
+    <string name="settings_export_copy">Copiază JSON</string>
+    <string name="settings_export_copied">JSON copiat.</string>
+    <string name="settings_export_empty">Au fost exportate 0 rețete.</string>
+    <string name="settings_export_ready">Au fost exportate %1$d rețete (schema v%2$d).</string>
+    <string name="settings_import_label">Lipește JSON-ul cu rețete</string>
+    <string name="settings_import_placeholder">{"schemaVersion": 1, "exportedAt": ..., "recipes": [...]}</string>
+    <string name="settings_import_policy">Politică duplicate</string>
+    <string name="settings_import_policy_skip">Sari peste</string>
+    <string name="settings_import_policy_keep_both">Păstrează ambele</string>
+    <string name="settings_import_action">Importă JSON</string>
+    <string name="settings_import_success">Importate %1$d rețete (sărite %2$d, copii %3$d).</string>
+    <string name="settings_import_error_json">JSON invalid: %1$s</string>
+    <string name="settings_import_error_version">Versiune schemă nesuportată %1$d (suportată: %2$d).</string>
+    <string name="settings_import_error_validation">Import respins: %1$d erori de validare. Nimic nu a fost salvat.</string>
+</resources>

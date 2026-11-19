@@ -1,0 +1,285 @@
+CREATE TABLE Recipe (
+  id TEXT NOT NULL PRIMARY KEY,
+  title TEXT NOT NULL,
+  normalizedTitle TEXT NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  baseServings INTEGER NOT NULL,
+  prepMinutes INTEGER NOT NULL DEFAULT 0,
+  cookMinutes INTEGER NOT NULL DEFAULT 0,
+  notes TEXT NOT NULL DEFAULT '',
+  isFavorite INTEGER NOT NULL DEFAULT 0,
+  createdAt INTEGER NOT NULL,
+  updatedAt INTEGER NOT NULL
+);
+
+CREATE TABLE RecipeIngredient (
+  id TEXT NOT NULL PRIMARY KEY,
+  recipeId TEXT NOT NULL REFERENCES Recipe(id) ON DELETE CASCADE,
+  position INTEGER NOT NULL,
+  name TEXT NOT NULL,
+  normalizedName TEXT NOT NULL,
+  quantity REAL,
+  unit TEXT NOT NULL,
+  aisle TEXT NOT NULL DEFAULT 'OTHER'
+);
+
+CREATE TABLE RecipeStep (
+  id TEXT NOT NULL PRIMARY KEY,
+  recipeId TEXT NOT NULL REFERENCES Recipe(id) ON DELETE CASCADE,
+  position INTEGER NOT NULL,
+  text TEXT NOT NULL
+);
+
+CREATE TABLE Tag (
+  id TEXT NOT NULL PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE RecipeTag (
+  recipeId TEXT NOT NULL REFERENCES Recipe(id) ON DELETE CASCADE,
+  tagId TEXT NOT NULL REFERENCES Tag(id) ON DELETE CASCADE,
+  PRIMARY KEY (recipeId, tagId)
+);
+
+CREATE TABLE MealPlanEntry (
+  id TEXT NOT NULL PRIMARY KEY,
+  date TEXT NOT NULL,
+  slot TEXT NOT NULL,
+  recipeId TEXT NOT NULL REFERENCES Recipe(id) ON DELETE CASCADE,
+  servings INTEGER NOT NULL
+);
+
+CREATE INDEX idx_plan_date ON MealPlanEntry(date);
+
+CREATE TABLE ShoppingItem (
+  id TEXT NOT NULL PRIMARY KEY,
+  weekStart TEXT NOT NULL,
+  itemKey TEXT NOT NULL,
+  name TEXT NOT NULL,
+  normalizedName TEXT NOT NULL,
+  quantity REAL,
+  unit TEXT NOT NULL,
+  aisle TEXT NOT NULL DEFAULT 'OTHER',
+  source TEXT NOT NULL,
+  checked INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE INDEX idx_shopping_week ON ShoppingItem(weekStart);
+CREATE INDEX idx_recipe_normalized_title ON Recipe(normalizedTitle);
+CREATE INDEX idx_ingredient_normalized_name ON RecipeIngredient(normalizedName);
+
+-- Recipe queries
+selectAllRecipes:
+SELECT *
+FROM Recipe
+ORDER BY updatedAt DESC, title COLLATE NOCASE ASC;
+
+selectRecipeById:
+SELECT *
+FROM Recipe
+WHERE id = :id;
+
+searchAndFilterRecipes:
+SELECT r.*
+FROM Recipe r
+WHERE (:queryPattern = ''
+       OR r.normalizedTitle LIKE :queryPattern
+       OR EXISTS (
+           SELECT 1
+           FROM RecipeIngredient ri
+           WHERE ri.recipeId = r.id
+             AND ri.normalizedName LIKE :queryPattern
+       ))
+  AND (:favoritesOnly = 0 OR r.isFavorite = 1)
+  AND (:maxTotalMinutes IS NULL OR (r.prepMinutes + r.cookMinutes) <= :maxTotalMinutes)
+ORDER BY r.updatedAt DESC, r.title COLLATE NOCASE ASC;
+
+insertRecipeIfAbsent:
+INSERT OR IGNORE INTO Recipe(
+  id, title, normalizedTitle, description, baseServings,
+  prepMinutes, cookMinutes, notes, isFavorite, createdAt, updatedAt
+)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+updateRecipe:
+UPDATE Recipe
+SET
+  title = :title,
+  normalizedTitle = :normalizedTitle,
+  description = :description,
+  baseServings = :baseServings,
+  prepMinutes = :prepMinutes,
+  cookMinutes = :cookMinutes,
+  notes = :notes,
+  isFavorite = :isFavorite,
+  updatedAt = :updatedAt
+WHERE id = :id;
+
+updateRecipeFavorite:
+UPDATE Recipe
+SET isFavorite = :isFavorite, updatedAt = :updatedAt
+WHERE id = :id;
+
+deleteRecipeById:
+DELETE FROM Recipe
+WHERE id = :id;
+
+deleteAllRecipes:
+DELETE FROM Recipe;
+
+-- Ingredient queries
+selectIngredientsByRecipeId:
+SELECT *
+FROM RecipeIngredient
+WHERE recipeId = :recipeId
+ORDER BY position ASC;
+
+selectAllIngredients:
+SELECT *
+FROM RecipeIngredient
+ORDER BY recipeId ASC, position ASC;
+
+insertIngredient:
+INSERT INTO RecipeIngredient(
+  id, recipeId, position, name, normalizedName, quantity, unit, aisle
+)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+deleteIngredientsByRecipeId:
+DELETE FROM RecipeIngredient
+WHERE recipeId = :recipeId;
+
+-- Step queries
+selectStepsByRecipeId:
+SELECT *
+FROM RecipeStep
+WHERE recipeId = :recipeId
+ORDER BY position ASC;
+
+selectAllSteps:
+SELECT *
+FROM RecipeStep
+ORDER BY recipeId ASC, position ASC;
+
+insertStep:
+INSERT INTO RecipeStep(id, recipeId, position, text)
+VALUES (?, ?, ?, ?);
+
+deleteStepsByRecipeId:
+DELETE FROM RecipeStep
+WHERE recipeId = :recipeId;
+
+-- Tag queries
+selectAllTags:
+SELECT *
+FROM Tag
+ORDER BY name COLLATE NOCASE ASC;
+
+selectTagByName:
+SELECT *
+FROM Tag
+WHERE name = :name;
+
+insertOrIgnoreTag:
+INSERT OR IGNORE INTO Tag(id, name)
+VALUES (?, ?);
+
+selectTagsByRecipeId:
+SELECT t.id, t.name
+FROM Tag t
+INNER JOIN RecipeTag rt ON rt.tagId = t.id
+WHERE rt.recipeId = :recipeId
+ORDER BY t.name COLLATE NOCASE ASC;
+
+selectAllRecipeTagRows:
+SELECT rt.recipeId, t.id AS tagId, t.name AS tagName
+FROM RecipeTag rt
+INNER JOIN Tag t ON t.id = rt.tagId
+ORDER BY t.name COLLATE NOCASE ASC;
+
+insertOrIgnoreRecipeTag:
+INSERT OR IGNORE INTO RecipeTag(recipeId, tagId)
+VALUES (?, ?);
+
+deleteRecipeTagsByRecipeId:
+DELETE FROM RecipeTag
+WHERE recipeId = :recipeId;
+
+deleteUnusedTags:
+DELETE FROM Tag
+WHERE id NOT IN (SELECT DISTINCT tagId FROM RecipeTag);
+
+-- MealPlanEntry queries
+selectMealPlanByRange:
+SELECT *
+FROM MealPlanEntry
+WHERE date >= :startDate AND date <= :endDate
+ORDER BY date ASC, slot ASC, id ASC;
+
+selectMealPlanByDate:
+SELECT *
+FROM MealPlanEntry
+WHERE date = :date
+ORDER BY slot ASC, id ASC;
+
+countMealPlanByRecipeId:
+SELECT COUNT(*)
+FROM MealPlanEntry
+WHERE recipeId = :recipeId;
+
+upsertMealPlanEntry:
+INSERT OR REPLACE INTO MealPlanEntry(id, date, slot, recipeId, servings)
+VALUES (?, ?, ?, ?, ?);
+
+updateMealPlanServings:
+UPDATE MealPlanEntry
+SET servings = :servings
+WHERE id = :id;
+
+deleteMealPlanById:
+DELETE FROM MealPlanEntry
+WHERE id = :id;
+
+deleteMealPlanByDate:
+DELETE FROM MealPlanEntry
+WHERE date = :date;
+
+deleteMealPlanByRange:
+DELETE FROM MealPlanEntry
+WHERE date >= :startDate AND date <= :endDate;
+
+deleteAllMealPlanEntries:
+DELETE FROM MealPlanEntry;
+
+-- ShoppingItem queries
+selectShoppingItemsByWeek:
+SELECT *
+FROM ShoppingItem
+WHERE weekStart = :weekStart
+ORDER BY aisle ASC, name COLLATE NOCASE ASC;
+
+upsertShoppingItem:
+INSERT OR REPLACE INTO ShoppingItem(
+  id, weekStart, itemKey, name, normalizedName, quantity, unit, aisle, source, checked
+)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+updateShoppingItemChecked:
+UPDATE ShoppingItem
+SET checked = :checked
+WHERE id = :id;
+
+deleteShoppingItemById:
+DELETE FROM ShoppingItem
+WHERE id = :id;
+
+deleteCheckedShoppingItemsByWeek:
+DELETE FROM ShoppingItem
+WHERE weekStart = :weekStart AND checked = 1;
+
+deleteShoppingItemsByWeek:
+DELETE FROM ShoppingItem
+WHERE weekStart = :weekStart;
+
+deleteAllShoppingItems:
+DELETE FROM ShoppingItem;

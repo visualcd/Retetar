@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux:
+    name: Build, Tests & Packaging (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: zulu
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Build and run all JVM, Android host, and Web browser tests
+        run: ./gradlew build allTests
+      - name: Verify Android release and Web production packaging
+        run: ./gradlew :app:androidApp:assembleRelease :app:androidApp:bundleRelease :app:webApp:jsBrowserDistribution :app:webApp:wasmJsBrowserDistribution
+
+  macos:
+    name: iOS Simulator Tests (macOS)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: zulu
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v6
+      - name: Run iOS simulator tests (core + shared Compose UI)
+        run: ./gradlew :core:iosSimulatorArm64Test :app:shared:iosSimulatorArm64Test
