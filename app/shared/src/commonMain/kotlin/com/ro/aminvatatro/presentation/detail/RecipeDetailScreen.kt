@@ -36,14 +36,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.AlertDialog
@@ -73,6 +76,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.ro.aminvatatro.domain.model.MealSlot
 import com.ro.aminvatatro.ui.components.ConfirmDialog
@@ -358,21 +362,45 @@ fun RecipeDetailScreen(
                                         onServingsChange = viewModel::onServingsChange,
                                     )
                                 }
-                                Button(
-                                    onClick = viewModel::openAddToPlanDialog,
-                                    modifier = Modifier.fillMaxWidth(),
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(IntrinsicSize.Min),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
                                 ) {
-                                    Icon(imageVector = AppIcons.Planner, contentDescription = null)
-                                    Spacer(Modifier.padding(horizontal = 4.dp))
-                                    Text(stringResource(Res.string.detail_add_to_plan))
-                                }
-                                OutlinedButton(
-                                    onClick = viewModel::addIngredientsToShoppingList,
-                                    modifier = Modifier.fillMaxWidth(),
-                                ) {
-                                    Icon(imageVector = AppIcons.Shopping, contentDescription = null)
-                                    Spacer(Modifier.padding(horizontal = 4.dp))
-                                    Text(stringResource(Res.string.action_add_to_shopping_list))
+                                    Button(
+                                        onClick = viewModel::openAddToPlanDialog,
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .fillMaxHeight(),
+                                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 6.dp),
+                                    ) {
+                                        Icon(imageVector = AppIcons.Planner, contentDescription = null)
+                                        Spacer(Modifier.width(4.dp))
+                                        Text(
+                                            text = stringResource(Res.string.detail_add_to_plan),
+                                            style = MaterialTheme.typography.labelMedium,
+                                            maxLines = 2,
+                                            overflow = TextOverflow.Ellipsis,
+                                        )
+                                    }
+                                    OutlinedButton(
+                                        onClick = viewModel::addIngredientsToShoppingList,
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .fillMaxHeight(),
+                                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 6.dp),
+                                    ) {
+                                        Icon(imageVector = AppIcons.Shopping, contentDescription = null)
+                                        Spacer(Modifier.width(4.dp))
+                                        Text(
+                                            text = stringResource(Res.string.action_add_to_shopping_list),
+                                            style = MaterialTheme.typography.labelMedium,
+                                            maxLines = 2,
+                                            overflow = TextOverflow.Ellipsis,
+                                        )
+                                    }
                                 }
                             }
                         }
