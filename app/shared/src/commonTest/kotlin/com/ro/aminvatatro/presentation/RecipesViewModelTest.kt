@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.ro.aminvatatro.domain.model.Tag
 import com.ro.aminvatatro.domain.usecase.recipe.GetRecipes
 import com.ro.aminvatatro.domain.usecase.recipe.ToggleFavorite
+import com.ro.aminvatatro.domain.usecase.shopping.AddRecipeToShoppingList
 import com.ro.aminvatatro.presentation.recipes.RecipesUiEvent
 import com.ro.aminvatatro.presentation.recipes.RecipesViewModel
 import kotlinx.coroutines.Dispatchers
@@ -120,5 +121,62 @@ class RecipesViewModelTest {
             assertEquals(RecipesUiEvent.CreateRecipe, awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
+    }
+
+    @Test
+    fun calorieTargetDialogGeneratesSuggestionsAndAcceptsRecipe() = runTest(testDispatcher) {
+        val repo = FakeRecipeRepository()
+        val saveRecipe = com.ro.aminvatatro.domain.usecase.recipe.SaveRecipe(repo, FakeClock(), SequenceIdGenerator("saved"))
+        val generateSuggestions = com.ro.aminvatatro.domain.usecase.nutrition.GenerateRecipesForCaloriesTarget(repo)
+        val vm = RecipesViewModel(
+            getRecipes = GetRecipes(repo),
+            toggleFavorite = ToggleFavorite(repo, FakeClock()),
+            recipeRepository = repo,
+            generateRecipesForCaloriesTarget = generateSuggestions,
+            saveRecipe = saveRecipe,
+        )
+
+        vm.openCalorieTargetDialog()
+        advanceUntilIdle()
+        assertTrue(vm.uiState.value.showCalorieDialog)
+        assertEquals(5, vm.uiState.value.calorieSuggestions.size)
+
+        val firstSuggestion = vm.uiState.value.calorieSuggestions.first()
+        vm.events.test {
+            vm.acceptSuggestion(firstSuggestion)
+            val event = awaitItem()
+            assertTrue(event is RecipesUiEvent.OpenRecipe)
+            cancelAndIgnoreRemainingEvents()
+        }
+        assertFalse(vm.uiState.value.showCalorieDialog)
+    }
+
+    @Test
+    fun onAddRecipeToShoppingListAddsIngredientsAndEmitsEvent() = runTest(testDispatcher) {
+        val repo = FakeRecipeRepository()
+        val shoppingRepo = FakeShoppingRepository()
+        val clock = FakeClock()
+        val idGen = SequenceIdGenerator("shop")
+        val addRecipeToShoppingList = AddRecipeToShoppingList(shoppingRepo, idGen, clock)
+
+        val r1 = sampleRecipe(id = "r1", title = "Pui cu orez")
+        repo.recipesFlow.value = listOf(r1)
+
+        val vm = RecipesViewModel(
+            getRecipes = GetRecipes(repo),
+            toggleFavorite = ToggleFavorite(repo, clock),
+            recipeRepository = repo,
+            addRecipeToShoppingList = addRecipeToShoppingList,
+        )
+        advanceUntilIdle()
+
+        vm.events.test {
+            vm.onAddRecipeToShoppingList("r1")
+            assertEquals(RecipesUiEvent.RecipeAddedToShopping, awaitItem())
+        }
+
+        val weekStart = com.ro.aminvatatro.core.time.WeekUtils.weekStartOf(clock.today())
+        val items = shoppingRepo.getItemsForWeek(weekStart)
+        assertTrue(items.isNotEmpty())
     }
 }

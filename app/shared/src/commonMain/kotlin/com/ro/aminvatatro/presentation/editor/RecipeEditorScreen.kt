@@ -16,6 +16,8 @@ import aminvatatro.app.shared.generated.resources.editor_field_notes
 import aminvatatro.app.shared.generated.resources.editor_field_prep_minutes
 import aminvatatro.app.shared.generated.resources.editor_field_servings
 import aminvatatro.app.shared.generated.resources.editor_field_title
+import aminvatatro.app.shared.generated.resources.editor_calories_badge
+import aminvatatro.app.shared.generated.resources.editor_ingredient_calories
 import aminvatatro.app.shared.generated.resources.editor_ingredient_aisle
 import aminvatatro.app.shared.generated.resources.editor_ingredient_name
 import aminvatatro.app.shared.generated.resources.editor_ingredient_quantity
@@ -323,6 +325,20 @@ fun RecipeEditorScreen(
                                     )
                                 }
                             }
+
+                            val totalCals = state.totalCalories
+                            val perServing = state.caloriesPerServing
+                            if (totalCals != null && perServing != null && totalCals > 0.0) {
+                                Text(
+                                    text = stringResource(
+                                        Res.string.editor_calories_badge,
+                                        totalCals.toInt(),
+                                        perServing.toInt(),
+                                    ),
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = MaterialTheme.colorScheme.primary,
+                                )
+                            }
                         }
                     }
 
@@ -569,25 +585,42 @@ private fun IngredientDraftCard(
                 }
             }
 
-            Box {
-                OutlinedButton(onClick = { aisleMenuOpen = true }) {
-                    Text(
-                        "${stringResource(Res.string.editor_ingredient_aisle)}: ${stringResource(draft.aisle.labelRes())}",
-                    )
-                }
-                DropdownMenu(
-                    expanded = aisleMenuOpen,
-                    onDismissRequest = { aisleMenuOpen = false },
-                ) {
-                    Aisle.entries.forEach { aisle ->
-                        DropdownMenuItem(
-                            text = { Text(stringResource(aisle.labelRes())) },
-                            onClick = {
-                                aisleMenuOpen = false
-                                onAisleChange(aisle)
-                            },
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Box {
+                    OutlinedButton(onClick = { aisleMenuOpen = true }) {
+                        Text(
+                            "${stringResource(Res.string.editor_ingredient_aisle)}: ${stringResource(draft.aisle.labelRes())}",
                         )
                     }
+                    DropdownMenu(
+                        expanded = aisleMenuOpen,
+                        onDismissRequest = { aisleMenuOpen = false },
+                    ) {
+                        Aisle.entries.forEach { aisle ->
+                            DropdownMenuItem(
+                                text = { Text(stringResource(aisle.labelRes())) },
+                                onClick = {
+                                    aisleMenuOpen = false
+                                    onAisleChange(aisle)
+                                },
+                            )
+                        }
+                    }
+                }
+
+                if (draft.isEstimatingCalories) {
+                    CircularProgressIndicator(modifier = Modifier.padding(end = 8.dp))
+                } else if (draft.calories != null && draft.calories > 0.0) {
+                    Text(
+                        text = stringResource(Res.string.editor_ingredient_calories, draft.calories.toInt()),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(end = 8.dp),
+                    )
                 }
             }
         }

@@ -2,14 +2,18 @@ package com.ro.aminvatatro.presentation.detail
 
 import aminvatatro.app.shared.generated.resources.Res
 import aminvatatro.app.shared.generated.resources.action_add
+import aminvatatro.app.shared.generated.resources.action_add_to_shopping_list
 import aminvatatro.app.shared.generated.resources.action_back
 import aminvatatro.app.shared.generated.resources.action_cancel
 import aminvatatro.app.shared.generated.resources.action_delete
 import aminvatatro.app.shared.generated.resources.action_edit
 import aminvatatro.app.shared.generated.resources.action_toggle_favorite
+import aminvatatro.app.shared.generated.resources.recipe_added_to_shopping_success
 import aminvatatro.app.shared.generated.resources.detail_add_to_plan
 import aminvatatro.app.shared.generated.resources.detail_add_to_plan_success
 import aminvatatro.app.shared.generated.resources.detail_add_to_plan_title
+import aminvatatro.app.shared.generated.resources.detail_calories_per_serving
+import aminvatatro.app.shared.generated.resources.detail_calories_total
 import aminvatatro.app.shared.generated.resources.detail_cook_time
 import aminvatatro.app.shared.generated.resources.detail_date_label
 import aminvatatro.app.shared.generated.resources.detail_delete_message
@@ -52,6 +56,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -104,6 +109,9 @@ fun RecipeDetailScreen(
                 RecipeDetailUiEvent.Deleted -> onNavigateBack()
                 RecipeDetailUiEvent.AddedToPlan -> {
                     snackbarHostState.showSnackbar(getString(Res.string.detail_add_to_plan_success))
+                }
+                RecipeDetailUiEvent.AddedToShoppingList -> {
+                    snackbarHostState.showSnackbar(getString(Res.string.recipe_added_to_shopping_success))
                 }
             }
         }
@@ -208,6 +216,15 @@ fun RecipeDetailScreen(
                             )
                         }
                         IconButton(
+                            onClick = viewModel::addIngredientsToShoppingList,
+                            modifier = Modifier.defaultMinSize(minWidth = 48.dp, minHeight = 48.dp),
+                        ) {
+                            Icon(
+                                imageVector = AppIcons.Shopping,
+                                contentDescription = stringResource(Res.string.action_add_to_shopping_list),
+                            )
+                        }
+                        IconButton(
                             onClick = { onEditRecipe(recipe.id) },
                             modifier = Modifier.defaultMinSize(minWidth = 48.dp, minHeight = 48.dp),
                         ) {
@@ -297,6 +314,23 @@ fun RecipeDetailScreen(
                                     style = MaterialTheme.typography.labelLarge,
                                     color = MaterialTheme.colorScheme.primary,
                                 )
+
+                                val perServing = recipe.caloriesPerServing
+                                if (perServing != null && perServing > 0.0) {
+                                    Text(
+                                        text = stringResource(Res.string.detail_calories_per_serving, perServing.toInt()),
+                                        style = MaterialTheme.typography.labelLarge,
+                                        color = MaterialTheme.colorScheme.secondary,
+                                    )
+                                }
+                                val totalCals = recipe.effectiveCaloriesTotal
+                                if (totalCals != null && totalCals > 0.0) {
+                                    Text(
+                                        text = stringResource(Res.string.detail_calories_total, totalCals.toInt()),
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    )
+                                }
                             }
                             if (recipe.tags.isNotEmpty()) {
                                 TagChips(tags = recipe.tags.map { it.name })
@@ -332,6 +366,14 @@ fun RecipeDetailScreen(
                                     Spacer(Modifier.padding(horizontal = 4.dp))
                                     Text(stringResource(Res.string.detail_add_to_plan))
                                 }
+                                OutlinedButton(
+                                    onClick = viewModel::addIngredientsToShoppingList,
+                                    modifier = Modifier.fillMaxWidth(),
+                                ) {
+                                    Icon(imageVector = AppIcons.Shopping, contentDescription = null)
+                                    Spacer(Modifier.padding(horizontal = 4.dp))
+                                    Text(stringResource(Res.string.action_add_to_shopping_list))
+                                }
                             }
                         }
                     }
@@ -353,6 +395,7 @@ fun RecipeDetailScreen(
                             unit = scaled.unit,
                             aisle = scaled.ingredient.aisle,
                             language = state.language,
+                            calories = scaled.scaledCalories,
                         )
                         if (index < state.scaledIngredients.lastIndex) {
                             HorizontalDivider()

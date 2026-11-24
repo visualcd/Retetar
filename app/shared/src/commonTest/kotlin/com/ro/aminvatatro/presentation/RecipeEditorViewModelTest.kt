@@ -125,4 +125,28 @@ class RecipeEditorViewModelTest {
         assertEquals(1_234L, updated.createdAt)
         assertEquals(9_999L, updated.updatedAt)
     }
+
+    @Test
+    fun ingredientCaloriesAreCalculatedAndTotalCaloriesComputed() = runTest(testDispatcher) {
+        val repo = FakeRecipeRepository()
+        val vm = RecipeEditorViewModel(
+            recipeId = null,
+            getRecipe = GetRecipe(repo),
+            saveRecipe = SaveRecipe(repo, FakeClock(), SequenceIdGenerator("rec")),
+            calculateIngredientCalories = com.ro.aminvatatro.domain.usecase.nutrition.CalculateIngredientCalories(
+                com.ro.aminvatatro.data.remote.OpenFoodFactsClient(),
+            ),
+        )
+
+        vm.onBaseServingsChange("2")
+        // 500g Făină (~1820 kcal)
+        vm.updateIngredient(0, name = "Făină", quantityText = "500", unit = MeasurementUnit.G, aisle = Aisle.PANTRY)
+        advanceUntilIdle()
+
+        val ing0 = vm.uiState.value.ingredients[0]
+        assertNotNull(ing0.calories)
+        assertEquals(1820.0, ing0.calories!!, 1.0)
+        assertEquals(1820.0, vm.uiState.value.totalCalories!!, 1.0)
+        assertEquals(910.0, vm.uiState.value.caloriesPerServing!!, 1.0)
+    }
 }

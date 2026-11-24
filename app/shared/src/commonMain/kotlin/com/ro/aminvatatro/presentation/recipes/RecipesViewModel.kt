@@ -6,8 +6,12 @@ import com.ro.aminvatatro.domain.model.Recipe
 import com.ro.aminvatatro.domain.model.Tag
 import com.ro.aminvatatro.domain.repository.RecipeFilter
 import com.ro.aminvatatro.domain.repository.RecipeRepository
+import com.ro.aminvatatro.domain.usecase.nutrition.CalorieRecipeSuggestion
+import com.ro.aminvatatro.domain.usecase.nutrition.GenerateRecipesForCaloriesTarget
 import com.ro.aminvatatro.domain.usecase.recipe.GetRecipes
+import com.ro.aminvatatro.domain.usecase.recipe.SaveRecipe
 import com.ro.aminvatatro.domain.usecase.recipe.ToggleFavorite
+import com.ro.aminvatatro.domain.usecase.shopping.AddRecipeToShoppingList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -32,6 +36,11 @@ data class RecipesUiState(
     val maxTotalMinutes: Int? = null,
     val favoritesOnly: Boolean = false,
     val hasError: Boolean = false,
+    val showCalorieDialog: Boolean = false,
+    val calorieTargetInput: String = "850",
+    val isGeneratingSuggestions: Boolean = false,
+    val calorieSuggestions: List<CalorieRecipeSuggestion> = emptyList(),
+    val calorieGenerationMessage: String? = null,
 ) {
     /** `true` when any search query or filter is currently active. */
     val hasActiveFilters: Boolean
@@ -44,16 +53,22 @@ data class RecipesUiState(
 sealed interface RecipesUiEvent {
     data class OpenRecipe(val recipeId: String) : RecipesUiEvent
     data object CreateRecipe : RecipesUiEvent
+    data class RecipeSaved(val recipeId: String) : RecipesUiEvent
+    data object RecipeAddedToShopping : RecipesUiEvent
 }
 
 /**
- * ViewModel driving the Recipes list screen with live search, filtering, and favorite toggling.
+ * ViewModel driving the Recipes list screen with live search, filtering, favorite toggling,
+ * and calorie-targeted recipe generation.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class RecipesViewModel(
     private val getRecipes: GetRecipes,
     private val toggleFavorite: ToggleFavorite,
     private val recipeRepository: RecipeRepository,
+    private val generateRecipesForCaloriesTarget: GenerateRecipesForCaloriesTarget? = null,
+    private val saveRecipe: SaveRecipe? = null,
+    private val addRecipeToShoppingList: AddRecipeToShoppingList? = null,
 ) : ViewModel() {
 
     private val filterFlow = MutableStateFlow(RecipeFilter())
@@ -143,6 +158,19 @@ class RecipesViewModel(
         }
     }
 
+    fun onAddRecipeToShoppingList(recipeId: String) {
+        val adder = addRecipeToShoppingList ?: return
+        viewModelScope.launch {
+            try {
+                val recipe = recipeRepository.getRecipeById(recipeId) ?: return@launch
+                adder(recipe = recipe, servings = recipe.baseServings)
+                _events.send(RecipesUiEvent.RecipeAddedToShopping)
+            } catch (_: Throwable) {
+                _uiState.update { it.copy(hasError = true) }
+            }
+        }
+    }
+
     fun onRecipeClicked(recipeId: String) {
         viewModelScope.launch {
             _events.send(RecipesUiEvent.OpenRecipe(recipeId))
@@ -158,6 +186,58 @@ class RecipesViewModel(
     fun retry() {
         _uiState.update { it.copy(isLoading = true, hasError = false) }
         syncFilter()
+    }
+
+    fun openCalorieTargetDialog() {
+        _uiState.update { it.copy(showCalorieDialog = true) }
+        generateSuggestionsForCurrentTarget()
+    }
+
+    fun dismissCalorieTargetDialog() {
+        _uiState.update { it.copy(showCalorieDialog = false, calorieGenerationMessage = null) }
+    }
+
+    fun onCalorieTargetInputChange(input: String) {
+        _uiState.update { it.copy(calorieTargetInput = input) }
+    }
+
+    fun generateSuggestionsForCurrentTarget() {
+        val generator = generateRecipesForCaloriesTarget ?: return
+        val target = _uiState.value.calorieTargetInput.trim().toDoubleOrNull()
+        if (target == null || target <= 0.0) {
+            _uiState.update { it.copy(calorieGenerationMessage = "Introdu un număr valid de kcal.") }
+            return
+        }
+
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    isGeneratingSuggestions = true,
+                    calorieGenerationMessage = null,
+                )
+            }
+            val suggestions = generator(maxKcalPerServing = target, limit = 5)
+            _uiState.update {
+                it.copy(
+                    isGeneratingSuggestions = false,
+                    calorieSuggestions = suggestions,
+                    calorieGenerationMessage = if (suggestions.isEmpty()) {
+                        "Nu am găsit rețete sub $target kcal."
+                    } else null,
+                )
+            }
+        }
+    }
+
+    fun acceptSuggestion(suggestion: CalorieRecipeSuggestion) {
+        val saver = saveRecipe ?: return
+        viewModelScope.launch {
+            val result = saver(suggestion.recipe)
+            if (result is com.ro.aminvatatro.domain.usecase.recipe.SaveRecipeResult.Success) {
+                _uiState.update { it.copy(showCalorieDialog = false) }
+                _events.send(RecipesUiEvent.OpenRecipe(result.recipe.id))
+            }
+        }
     }
 
     private fun syncFilter() {

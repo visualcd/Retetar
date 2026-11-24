@@ -9,7 +9,8 @@ CREATE TABLE Recipe (
   notes TEXT NOT NULL DEFAULT '',
   isFavorite INTEGER NOT NULL DEFAULT 0,
   createdAt INTEGER NOT NULL,
-  updatedAt INTEGER NOT NULL
+  updatedAt INTEGER NOT NULL,
+  caloriesTotal REAL
 );
 
 CREATE TABLE RecipeIngredient (
@@ -20,7 +21,8 @@ CREATE TABLE RecipeIngredient (
   normalizedName TEXT NOT NULL,
   quantity REAL,
   unit TEXT NOT NULL,
-  aisle TEXT NOT NULL DEFAULT 'OTHER'
+  aisle TEXT NOT NULL DEFAULT 'OTHER',
+  calories REAL
 );
 
 CREATE TABLE RecipeStep (
@@ -97,9 +99,9 @@ ORDER BY r.updatedAt DESC, r.title COLLATE NOCASE ASC;
 insertRecipeIfAbsent:
 INSERT OR IGNORE INTO Recipe(
   id, title, normalizedTitle, description, baseServings,
-  prepMinutes, cookMinutes, notes, isFavorite, createdAt, updatedAt
+  prepMinutes, cookMinutes, notes, isFavorite, createdAt, updatedAt, caloriesTotal
 )
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 updateRecipe:
 UPDATE Recipe
@@ -112,7 +114,8 @@ SET
   cookMinutes = :cookMinutes,
   notes = :notes,
   isFavorite = :isFavorite,
-  updatedAt = :updatedAt
+  updatedAt = :updatedAt,
+  caloriesTotal = :caloriesTotal
 WHERE id = :id;
 
 updateRecipeFavorite:
@@ -141,9 +144,9 @@ ORDER BY recipeId ASC, position ASC;
 
 insertIngredient:
 INSERT INTO RecipeIngredient(
-  id, recipeId, position, name, normalizedName, quantity, unit, aisle
+  id, recipeId, position, name, normalizedName, quantity, unit, aisle, calories
 )
-VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
 
 deleteIngredientsByRecipeId:
 DELETE FROM RecipeIngredient

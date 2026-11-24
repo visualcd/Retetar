@@ -10,6 +10,7 @@ import com.ro.aminvatatro.domain.usecase.recipe.DeleteRecipe
 import com.ro.aminvatatro.domain.usecase.recipe.GetRecipe
 import com.ro.aminvatatro.domain.usecase.recipe.ScaleRecipe
 import com.ro.aminvatatro.domain.usecase.recipe.ToggleFavorite
+import com.ro.aminvatatro.domain.usecase.shopping.AddRecipeToShoppingList
 import com.ro.aminvatatro.presentation.detail.RecipeDetailUiEvent
 import com.ro.aminvatatro.presentation.detail.RecipeDetailViewModel
 import kotlinx.coroutines.Dispatchers
@@ -158,5 +159,43 @@ class RecipeDetailViewModelTest {
         assertEquals(MealSlot.DINNER, saved.slot)
         assertEquals("r1", saved.recipeId)
         assertEquals(3, saved.servings)
+    }
+
+    @Test
+    fun addIngredientsToShoppingListEmitsEventAndPopulatesRepository() = runTest(testDispatcher) {
+        val planRepo = FakeMealPlanRepository()
+        val recipeRepo = FakeRecipeRepository(planRepo)
+        val shoppingRepo = FakeShoppingRepository()
+        val settingsRepo = FakeSettingsRepository()
+        val clock = FakeClock()
+        val idGen = SequenceIdGenerator("shop")
+        val addRecipeToShoppingList = AddRecipeToShoppingList(shoppingRepo, idGen, clock)
+
+        recipeRepo.recipesFlow.value = listOf(sampleRecipe(id = "r1", baseServings = 2))
+
+        val vm = RecipeDetailViewModel(
+            recipeId = "r1",
+            getRecipe = GetRecipe(recipeRepo),
+            scaleRecipe = ScaleRecipe(),
+            toggleFavorite = ToggleFavorite(recipeRepo, clock),
+            deleteRecipe = DeleteRecipe(recipeRepo),
+            setPlanEntry = SetPlanEntry(planRepo, recipeRepo, SequenceIdGenerator("mp")),
+            settingsRepository = settingsRepo,
+            clock = clock,
+            addRecipeToShoppingList = addRecipeToShoppingList,
+        )
+        advanceUntilIdle()
+
+        vm.onServingsChange(4)
+        advanceUntilIdle()
+
+        vm.events.test {
+            vm.addIngredientsToShoppingList()
+            assertEquals(RecipeDetailUiEvent.AddedToShoppingList, awaitItem())
+        }
+
+        val weekStart = com.ro.aminvatatro.core.time.WeekUtils.weekStartOf(clock.today())
+        val items = shoppingRepo.getItemsForWeek(weekStart)
+        assertTrue(items.isNotEmpty())
     }
 }

@@ -9,6 +9,7 @@ import com.ro.aminvatatro.data.local.DriverFactory
 import com.ro.aminvatatro.data.local.JsonKeyValueStore
 import com.ro.aminvatatro.data.local.defaultLocalStoreJson
 import com.ro.aminvatatro.data.local.db.RetetarDatabase
+import com.ro.aminvatatro.data.remote.OpenFoodFactsClient
 import com.ro.aminvatatro.data.repository.SqlDelightMealPlanRepository
 import com.ro.aminvatatro.data.repository.SqlDelightRecipeRepository
 import com.ro.aminvatatro.data.repository.SqlDelightShoppingRepository
@@ -23,6 +24,8 @@ import com.ro.aminvatatro.domain.repository.SettingsRepository
 import com.ro.aminvatatro.domain.repository.ShoppingRepository
 import com.ro.aminvatatro.domain.usecase.importexport.ExportRecipes
 import com.ro.aminvatatro.domain.usecase.importexport.ImportRecipes
+import com.ro.aminvatatro.domain.usecase.nutrition.CalculateIngredientCalories
+import com.ro.aminvatatro.domain.usecase.nutrition.GenerateRecipesForCaloriesTarget
 import com.ro.aminvatatro.domain.usecase.plan.ChangeServings
 import com.ro.aminvatatro.domain.usecase.plan.CopyDay
 import com.ro.aminvatatro.domain.usecase.plan.RemovePlanEntry
@@ -35,6 +38,7 @@ import com.ro.aminvatatro.domain.usecase.recipe.SaveRecipe
 import com.ro.aminvatatro.domain.usecase.recipe.ScaleRecipe
 import com.ro.aminvatatro.domain.usecase.recipe.ToggleFavorite
 import com.ro.aminvatatro.domain.usecase.shopping.AddManualItem
+import com.ro.aminvatatro.domain.usecase.shopping.AddRecipeToShoppingList
 import com.ro.aminvatatro.domain.usecase.shopping.ClearChecked
 import com.ro.aminvatatro.domain.usecase.shopping.GenerateShoppingList
 import com.ro.aminvatatro.domain.usecase.shopping.RemoveItem
@@ -56,6 +60,7 @@ val coreModule: Module = module {
     single<Json> { defaultLocalStoreJson }
     single<Settings> { Settings() }
     single<SettingsRepository> { SettingsRepositoryImpl(backingSettings = get()) }
+    single { OpenFoodFactsClient() }
 }
 
 /**
@@ -112,6 +117,7 @@ val useCaseModule: Module = module {
             idGenerator = get(),
         )
     }
+    factory { AddRecipeToShoppingList(shoppingRepository = get(), idGenerator = get(), clock = get()) }
     factory { ToggleItem(shoppingRepository = get()) }
     factory { AddManualItem(shoppingRepository = get(), idGenerator = get()) }
     factory { RemoveItem(shoppingRepository = get()) }
@@ -119,6 +125,8 @@ val useCaseModule: Module = module {
 
     factory { ExportRecipes(recipeRepository = get(), clock = get()) }
     factory { ImportRecipes(recipeRepository = get(), clock = get(), idGenerator = get()) }
+    factory { CalculateIngredientCalories(openFoodFactsClient = get()) }
+    factory { GenerateRecipesForCaloriesTarget(recipeRepository = get()) }
 }
 
 /**

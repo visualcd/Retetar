@@ -36,6 +36,7 @@ internal fun DbRecipe.toDomain(
     isFavorite = isFavorite != 0L,
     createdAt = createdAt,
     updatedAt = updatedAt,
+    caloriesTotal = caloriesTotal,
 )
 
 internal fun DbRecipeIngredient.toDomain(): Ingredient = Ingredient(
@@ -45,6 +46,7 @@ internal fun DbRecipeIngredient.toDomain(): Ingredient = Ingredient(
     quantity = quantity,
     unit = parseMeasurementUnit(unit),
     aisle = parseAisle(aisle),
+    calories = calories,
 )
 
 internal fun DbRecipeStep.toDomain(): Step = Step(

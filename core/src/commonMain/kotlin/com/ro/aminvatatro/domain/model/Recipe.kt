@@ -21,6 +21,7 @@ data class Ingredient(
     val quantity: Double?,
     val unit: MeasurementUnit,
     val aisle: Aisle = Aisle.OTHER,
+    val calories: Double? = null,
 ) {
     /** Canonical normalized name used for diacritic-insensitive search and aggregation. */
     val normalizedName: String
@@ -53,10 +54,27 @@ data class Recipe(
     val isFavorite: Boolean = false,
     val createdAt: Long = 0L,
     val updatedAt: Long = 0L,
+    val caloriesTotal: Double? = null,
 ) {
     /** Total preparation plus cooking time in minutes. */
     val totalMinutes: Int
         get() = prepMinutes + cookMinutes
+
+    /** Computed or stored total calories for the whole recipe. */
+    val effectiveCaloriesTotal: Double?
+        get() {
+            if (caloriesTotal != null && caloriesTotal > 0.0) return caloriesTotal
+            val ingredientCals = ingredients.mapNotNull { it.calories }
+            return if (ingredientCals.isNotEmpty()) ingredientCals.sum() else null
+        }
+
+    /** Calories per serving for the base servings count. */
+    val caloriesPerServing: Double?
+        get() {
+            val total = effectiveCaloriesTotal ?: return null
+            if (baseServings <= 0) return null
+            return total / baseServings
+        }
 
     /** Canonical normalized title used for diacritic-insensitive search and duplicate detection. */
     val normalizedTitle: String

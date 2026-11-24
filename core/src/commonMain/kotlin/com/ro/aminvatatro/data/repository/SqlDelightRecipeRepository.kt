@@ -179,6 +179,7 @@ class SqlDelightRecipeRepository(
             isFavorite = favoriteFlag,
             createdAt = recipe.createdAt,
             updatedAt = recipe.updatedAt,
+            caloriesTotal = recipe.effectiveCaloriesTotal,
         )
         queries.updateRecipe(
             title = trimmedTitle,
@@ -190,6 +191,7 @@ class SqlDelightRecipeRepository(
             notes = trimmedNotes,
             isFavorite = favoriteFlag,
             updatedAt = recipe.updatedAt,
+            caloriesTotal = recipe.effectiveCaloriesTotal,
             id = recipe.id,
         )
 
@@ -205,6 +207,7 @@ class SqlDelightRecipeRepository(
                 quantity = ingredient.quantity,
                 unit = ingredient.unit.name,
                 aisle = ingredient.aisle.name,
+                calories = ingredient.calories,
             )
         }
 

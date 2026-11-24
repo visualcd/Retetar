@@ -19,6 +19,7 @@ import com.ro.aminvatatro.domain.usecase.recipe.SaveRecipe
 import com.ro.aminvatatro.domain.usecase.recipe.ScaleRecipe
 import com.ro.aminvatatro.domain.usecase.recipe.ToggleFavorite
 import com.ro.aminvatatro.domain.usecase.shopping.AddManualItem
+import com.ro.aminvatatro.domain.usecase.shopping.AddRecipeToShoppingList
 import com.ro.aminvatatro.domain.usecase.shopping.ClearChecked
 import com.ro.aminvatatro.domain.usecase.shopping.GenerateShoppingList
 import com.ro.aminvatatro.domain.usecase.shopping.RemoveItem
@@ -56,6 +57,7 @@ class UseCaseKoinModuleTest {
             assertNotNull(koin.get<RepeatPreviousWeek>())
 
             assertNotNull(koin.get<GenerateShoppingList>())
+            assertNotNull(koin.get<AddRecipeToShoppingList>())
             assertNotNull(koin.get<ToggleItem>())
             assertNotNull(koin.get<AddManualItem>())
             assertNotNull(koin.get<RemoveItem>())

@@ -32,6 +32,7 @@ fun IngredientRow(
     language: AppLanguage,
     modifier: Modifier = Modifier,
     showAisle: Boolean = true,
+    calories: Double? = null,
 ) {
     val unitLabel = stringResource(unit.labelRes())
     val formattedQty = QuantityFormatter.format(quantity = quantity, language = language)
@@ -55,6 +56,13 @@ fun IngredientRow(
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f),
         )
+        if (calories != null && calories > 0.0) {
+            Text(
+                text = "${calories.toInt()} kcal",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.secondary,
+            )
+        }
         if (quantityText.isNotEmpty()) {
             Text(
                 text = quantityText,

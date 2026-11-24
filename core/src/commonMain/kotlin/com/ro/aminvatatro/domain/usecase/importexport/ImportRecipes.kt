@@ -259,6 +259,7 @@ class ImportRecipes(
                     quantity = ingredientDto.quantity,
                     unit = unit,
                     aisle = aisle,
+                    calories = ingredientDto.calories,
                 )
             }
         }
@@ -297,6 +298,7 @@ class ImportRecipes(
             isFavorite = dto.isFavorite,
             createdAt = dto.createdAt,
             updatedAt = dto.updatedAt,
+            caloriesTotal = dto.caloriesTotal,
         )
 
         val validation = RecipeValidator.validate(candidate)

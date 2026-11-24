@@ -2,17 +2,21 @@ package com.ro.aminvatatro.presentation.editor
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ro.aminvatatro.core.nutrition.NutritionDatabase
 import com.ro.aminvatatro.core.units.MeasurementUnit
 import com.ro.aminvatatro.domain.model.Aisle
 import com.ro.aminvatatro.domain.model.Ingredient
 import com.ro.aminvatatro.domain.model.Recipe
 import com.ro.aminvatatro.domain.model.Step
 import com.ro.aminvatatro.domain.model.Tag
+import com.ro.aminvatatro.domain.usecase.nutrition.CalculateIngredientCalories
 import com.ro.aminvatatro.domain.usecase.recipe.GetRecipe
 import com.ro.aminvatatro.domain.usecase.recipe.SaveRecipe
 import com.ro.aminvatatro.domain.usecase.recipe.SaveRecipeResult
 import com.ro.aminvatatro.domain.validation.RecipeValidationError
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,6 +35,8 @@ data class IngredientDraft(
     val quantityText: String = "",
     val unit: MeasurementUnit = MeasurementUnit.G,
     val aisle: Aisle = Aisle.OTHER,
+    val calories: Double? = null,
+    val isEstimatingCalories: Boolean = false,
 )
 
 /**
@@ -65,6 +71,21 @@ data class RecipeEditorUiState(
     val loadError: Boolean = false,
 ) {
     val isEditing: Boolean get() = recipeId != null
+
+    /** Total estimated calories for all ingredients in the draft. */
+    val totalCalories: Double?
+        get() {
+            val cals = ingredients.mapNotNull { it.calories }
+            return if (cals.isNotEmpty()) cals.sum() else null
+        }
+
+    /** Estimated calories per serving for the draft. */
+    val caloriesPerServing: Double?
+        get() {
+            val total = totalCalories ?: return null
+            val servings = baseServingsText.trim().toIntOrNull() ?: return null
+            return if (servings > 0) total / servings else null
+        }
 }
 
 /**
@@ -81,9 +102,11 @@ class RecipeEditorViewModel(
     private val recipeId: String?,
     private val getRecipe: GetRecipe,
     private val saveRecipe: SaveRecipe,
+    private val calculateIngredientCalories: CalculateIngredientCalories? = null,
 ) : ViewModel() {
 
     private var nextKeyCounter = 10
+    private val calorieJobs = mutableMapOf<Int, Job>()
 
     private val _uiState = MutableStateFlow(
         RecipeEditorUiState(
@@ -130,6 +153,7 @@ class RecipeEditorViewModel(
                                     quantityText = ing.quantity?.let(::formatDraftQuantity) ?: "",
                                     unit = ing.unit,
                                     aisle = ing.aisle,
+                                    calories = ing.calories,
                                 )
                             },
                             steps = recipe.steps.map { step ->
@@ -170,6 +194,7 @@ class RecipeEditorViewModel(
         quantityText: String? = null,
         unit: MeasurementUnit? = null,
         aisle: Aisle? = null,
+        calories: Double? = null,
     ) {
         _uiState.update { state ->
             if (index !in state.ingredients.indices) return@update state
@@ -181,13 +206,66 @@ class RecipeEditorViewModel(
                 quantityText != null -> quantityText
                 else -> current.quantityText
             }
+            val resolvedName = name ?: current.name
+            val nameOrQtyChanged = (name != null && name != current.name) ||
+                (quantityText != null && quantityText != current.quantityText) ||
+                (unit != null && unit != current.unit)
+
+            val resolvedCalories = if (calories != null) {
+                calories
+            } else if (nameOrQtyChanged) {
+                null
+            } else {
+                current.calories
+            }
+
             updated[index] = current.copy(
-                name = name ?: current.name,
+                name = resolvedName,
                 quantityText = resolvedQty,
                 unit = resolvedUnit,
                 aisle = aisle ?: current.aisle,
+                calories = resolvedCalories,
             )
             state.copy(ingredients = updated)
+        }
+
+        scheduleCaloriesCalculation(index)
+    }
+
+    private fun scheduleCaloriesCalculation(index: Int) {
+        val calculator = calculateIngredientCalories ?: return
+        val current = _uiState.value.ingredients.getOrNull(index) ?: return
+        if (current.name.isBlank()) return
+        val parsedQty = parseNullableDouble(current.quantityText)
+        if (current.unit != MeasurementUnit.TO_TASTE && (parsedQty == null || parsedQty <= 0.0)) return
+
+        calorieJobs[current.localKey]?.cancel()
+        calorieJobs[current.localKey] = viewModelScope.launch {
+            delay(350) // debounce user typing
+            _uiState.update { state ->
+                val list = state.ingredients.toMutableList()
+                val idx = list.indexOfFirst { it.localKey == current.localKey }
+                if (idx != -1) {
+                    list[idx] = list[idx].copy(isEstimatingCalories = true)
+                    state.copy(ingredients = list)
+                } else state
+            }
+            val estimated = calculator(
+                name = current.name,
+                quantity = parsedQty,
+                unit = current.unit,
+            )
+            _uiState.update { state ->
+                val list = state.ingredients.toMutableList()
+                val idx = list.indexOfFirst { it.localKey == current.localKey }
+                if (idx != -1) {
+                    list[idx] = list[idx].copy(
+                        calories = estimated,
+                        isEstimatingCalories = false,
+                    )
+                    state.copy(ingredients = list)
+                } else state
+            }
         }
     }
 
@@ -319,6 +397,7 @@ class RecipeEditorViewModel(
                 quantity = parsedQuantity,
                 unit = draft.unit,
                 aisle = draft.aisle,
+                calories = draft.calories,
             )
         }
 
@@ -345,6 +424,7 @@ class RecipeEditorViewModel(
             notes = state.notes,
             isFavorite = state.isFavorite,
             createdAt = state.createdAt,
+            caloriesTotal = state.totalCalories,
         )
     }
 

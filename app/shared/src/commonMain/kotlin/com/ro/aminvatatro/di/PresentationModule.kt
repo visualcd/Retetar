@@ -22,6 +22,9 @@ val presentationModule: Module = module {
             getRecipes = get(),
             toggleFavorite = get(),
             recipeRepository = get(),
+            generateRecipesForCaloriesTarget = get(),
+            saveRecipe = get(),
+            addRecipeToShoppingList = get(),
         )
     }
     viewModel { (recipeId: String) ->
@@ -34,6 +37,7 @@ val presentationModule: Module = module {
             setPlanEntry = get(),
             settingsRepository = get(),
             clock = get(),
+            addRecipeToShoppingList = get(),
         )
     }
     viewModel { params ->
@@ -41,6 +45,7 @@ val presentationModule: Module = module {
             recipeId = params.getOrNull<String>(),
             getRecipe = get(),
             saveRecipe = get(),
+            calculateIngredientCalories = get(),
         )
     }
     viewModel {

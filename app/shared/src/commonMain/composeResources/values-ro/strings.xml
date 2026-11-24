@@ -86,6 +86,13 @@
     <string name="recipes_filter_time_15">≤ 15 min</string>
     <string name="recipes_filter_time_30">≤ 30 min</string>
     <string name="recipes_filter_time_60">≤ 60 min</string>
+    <string name="recipes_generate_by_calories">Generează după kcal</string>
+    <string name="recipes_calorie_dialog_title">Rețete după țintă calorică</string>
+    <string name="recipes_calorie_dialog_desc">Alege o limită maximă de calorii per porție și primești 5 sugestii de rețete echilibrate.</string>
+    <string name="recipes_calorie_target_label">Kcal max / porție</string>
+    <string name="recipes_calorie_btn_generate">Generează 5 rețete</string>
+    <string name="recipes_calorie_accept">Salvează și deschide</string>
+    <string name="recipes_calorie_badge">%1$d kcal/porție</string>
     <string name="recipes_clear_filters">Resetează filtrele</string>
     <string name="recipes_empty_title">Nu ai rețete încă</string>
     <string name="recipes_empty_subtitle">Creează prima rețetă sau încarcă rețetele demo din Setări.</string>
@@ -98,6 +105,8 @@
     <string name="detail_prep_time">Pregătire: %1$d min</string>
     <string name="detail_cook_time">Gătire: %1$d min</string>
     <string name="detail_total_time">Total: %1$d min</string>
+    <string name="detail_calories_per_serving">%1$d kcal / porție</string>
+    <string name="detail_calories_total">Total: %1$d kcal</string>
     <string name="detail_ingredients">Ingrediente</string>
     <string name="detail_steps">Pași de preparare</string>
     <string name="detail_notes">Note</string>
@@ -121,6 +130,8 @@
     <string name="editor_field_prep_minutes">Pregătire (min)</string>
     <string name="editor_field_cook_minutes">Gătire (min)</string>
     <string name="editor_field_notes">Note</string>
+    <string name="editor_calories_badge">Total estimat: %1$d kcal (%2$d kcal/porție)</string>
+    <string name="editor_ingredient_calories">%1$d kcal</string>
     <string name="editor_section_ingredients">Ingrediente</string>
     <string name="editor_add_ingredient">Adaugă ingredient</string>
     <string name="editor_ingredient_name">Nume ingredient</string>
@@ -196,6 +207,8 @@
     <string name="shopping_error_name_blank">Numele articolului este obligatoriu.</string>
     <string name="shopping_error_name_too_long">Numele articolului este prea lung (maxim %1$d caractere).</string>
     <string name="shopping_error_invalid_quantity">Introdu o cantitate validă mai mare ca 0 (lasă gol pentru „după gust”).</string>
+    <string name="action_add_to_shopping_list">Adaugă în lista de cumpărături</string>
+    <string name="recipe_added_to_shopping_success">Ingredientele au fost adăugate în lista de cumpărături.</string>
 
     <!-- Ecran setări -->
     <string name="settings_title">Setări</string>

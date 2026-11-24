@@ -15,6 +15,7 @@ data class ScaledIngredient(
     val ingredient: Ingredient,
     val quantity: Double?,
     val unit: MeasurementUnit,
+    val scaledCalories: Double? = null,
 )
 
 /**
@@ -77,10 +78,14 @@ class ScaleRecipe {
             } else {
                 rawScaled to ingredient.unit
             }
+            val scaledCals = ingredient.calories?.let { cals ->
+                (cals * targetServings) / recipe.baseServings
+            }
             ScaledIngredient(
                 ingredient = ingredient,
                 quantity = finalQuantity,
                 unit = finalUnit,
+                scaledCalories = scaledCals,
             )
         }
 

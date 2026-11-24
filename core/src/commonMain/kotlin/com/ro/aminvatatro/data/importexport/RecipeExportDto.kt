@@ -53,6 +53,7 @@ data class RecipeExportDto(
     val isFavorite: Boolean = false,
     val createdAt: Long = 0L,
     val updatedAt: Long = 0L,
+    val caloriesTotal: Double? = null,
 )
 
 /**
@@ -66,6 +67,7 @@ data class IngredientExportDto(
     val quantity: Double? = null,
     val unit: String,
     val aisle: String = Aisle.OTHER.name,
+    val calories: Double? = null,
 )
 
 /**
@@ -96,6 +98,7 @@ fun Recipe.toExportDto(): RecipeExportDto = RecipeExportDto(
             quantity = ingredient.quantity,
             unit = ingredient.unit.name,
             aisle = ingredient.aisle.name,
+            calories = ingredient.calories,
         )
     },
     steps = steps.mapIndexed { index, step ->
@@ -110,4 +113,5 @@ fun Recipe.toExportDto(): RecipeExportDto = RecipeExportDto(
     isFavorite = isFavorite,
     createdAt = createdAt,
     updatedAt = updatedAt,
+    caloriesTotal = effectiveCaloriesTotal,
 )

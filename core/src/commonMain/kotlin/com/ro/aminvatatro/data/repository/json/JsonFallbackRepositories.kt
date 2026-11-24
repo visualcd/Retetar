@@ -31,6 +31,7 @@ internal data class StoredIngredientDto(
     val quantity: Double?,
     val unit: String,
     val aisle: String,
+    val calories: Double? = null,
 )
 
 @Serializable
@@ -61,6 +62,7 @@ internal data class StoredRecipeDto(
     val isFavorite: Boolean = false,
     val createdAt: Long = 0L,
     val updatedAt: Long = 0L,
+    val caloriesTotal: Double? = null,
 )
 
 @Serializable
@@ -396,6 +398,7 @@ private fun Recipe.toDto(preservedCreatedAt: Long): StoredRecipeDto = StoredReci
             quantity = ing.quantity,
             unit = ing.unit.name,
             aisle = ing.aisle.name,
+            calories = ing.calories,
         )
     },
     steps = steps.mapIndexed { idx, step ->
@@ -414,6 +417,7 @@ private fun Recipe.toDto(preservedCreatedAt: Long): StoredRecipeDto = StoredReci
     isFavorite = isFavorite,
     createdAt = preservedCreatedAt,
     updatedAt = updatedAt,
+    caloriesTotal = effectiveCaloriesTotal,
 )
 
 private fun StoredRecipeDto.toDomain(): Recipe = Recipe(
@@ -431,6 +435,7 @@ private fun StoredRecipeDto.toDomain(): Recipe = Recipe(
             quantity = it.quantity,
             unit = parseMeasurementUnit(it.unit),
             aisle = parseAisle(it.aisle),
+            calories = it.calories,
         )
     },
     steps = steps.sortedBy { it.position }.map {
@@ -441,6 +446,7 @@ private fun StoredRecipeDto.toDomain(): Recipe = Recipe(
     isFavorite = isFavorite,
     createdAt = createdAt,
     updatedAt = updatedAt,
+    caloriesTotal = caloriesTotal,
 )
 
 private fun MealPlanEntry.toDto(): StoredMealPlanEntryDto = StoredMealPlanEntryDto(

@@ -18,6 +18,7 @@ import com.ro.aminvatatro.domain.usecase.recipe.ScaleRecipe
 import com.ro.aminvatatro.domain.usecase.recipe.ScaleRecipeResult
 import com.ro.aminvatatro.domain.usecase.recipe.ScaledIngredient
 import com.ro.aminvatatro.domain.usecase.recipe.ToggleFavorite
+import com.ro.aminvatatro.domain.usecase.shopping.AddRecipeToShoppingList
 import com.ro.aminvatatro.domain.validation.RecipeValidator
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -56,6 +57,7 @@ data class RecipeDetailUiState(
 sealed interface RecipeDetailUiEvent {
     data object Deleted : RecipeDetailUiEvent
     data object AddedToPlan : RecipeDetailUiEvent
+    data object AddedToShoppingList : RecipeDetailUiEvent
 }
 
 /**
@@ -71,6 +73,7 @@ class RecipeDetailViewModel(
     private val setPlanEntry: SetPlanEntry,
     private val settingsRepository: SettingsRepository,
     private val clock: Clock,
+    private val addRecipeToShoppingList: AddRecipeToShoppingList? = null,
 ) : ViewModel() {
 
     private val selectedServingsFlow = MutableStateFlow<Int?>(null)
@@ -214,6 +217,24 @@ class RecipeDetailViewModel(
             if (result is SetPlanEntryResult.Success) {
                 _events.send(RecipeDetailUiEvent.AddedToPlan)
             } else {
+                _uiState.update { it.copy(hasError = true) }
+            }
+        }
+    }
+
+    fun addIngredientsToShoppingList() {
+        val currentRecipe = _uiState.value.recipe ?: return
+        val servings = _uiState.value.selectedServings
+        val adder = addRecipeToShoppingList ?: return
+        viewModelScope.launch {
+            try {
+                adder(
+                    recipe = currentRecipe,
+                    servings = servings,
+                    targetDate = clock.today(),
+                )
+                _events.send(RecipeDetailUiEvent.AddedToShoppingList)
+            } catch (_: Throwable) {
                 _uiState.update { it.copy(hasError = true) }
             }
         }

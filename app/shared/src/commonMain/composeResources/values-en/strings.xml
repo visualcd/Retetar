@@ -86,6 +86,13 @@
     <string name="recipes_filter_time_15">≤ 15 min</string>
     <string name="recipes_filter_time_30">≤ 30 min</string>
     <string name="recipes_filter_time_60">≤ 60 min</string>
+    <string name="recipes_generate_by_calories">Generate by kcal</string>
+    <string name="recipes_calorie_dialog_title">Recipes by calorie target</string>
+    <string name="recipes_calorie_dialog_desc">Select a maximum calorie limit per serving to get 5 balanced recipe suggestions.</string>
+    <string name="recipes_calorie_target_label">Max kcal / serving</string>
+    <string name="recipes_calorie_btn_generate">Generate 5 recipes</string>
+    <string name="recipes_calorie_accept">Save and open</string>
+    <string name="recipes_calorie_badge">%1$d kcal/serving</string>
     <string name="recipes_clear_filters">Clear filters</string>
     <string name="recipes_empty_title">No recipes yet</string>
     <string name="recipes_empty_subtitle">Create your first recipe or load the demo recipes from Settings.</string>
@@ -98,6 +105,8 @@
     <string name="detail_prep_time">Prep: %1$d min</string>
     <string name="detail_cook_time">Cook: %1$d min</string>
     <string name="detail_total_time">Total: %1$d min</string>
+    <string name="detail_calories_per_serving">%1$d kcal / serving</string>
+    <string name="detail_calories_total">Total: %1$d kcal</string>
     <string name="detail_ingredients">Ingredients</string>
     <string name="detail_steps">Steps</string>
     <string name="detail_notes">Notes</string>
@@ -121,6 +130,8 @@
     <string name="editor_field_prep_minutes">Prep time (min)</string>
     <string name="editor_field_cook_minutes">Cook time (min)</string>
     <string name="editor_field_notes">Notes</string>
+    <string name="editor_calories_badge">Estimated total: %1$d kcal (%2$d kcal/serving)</string>
+    <string name="editor_ingredient_calories">%1$d kcal</string>
     <string name="editor_section_ingredients">Ingredients</string>
     <string name="editor_add_ingredient">Add ingredient</string>
     <string name="editor_ingredient_name">Ingredient name</string>
@@ -196,6 +207,8 @@
     <string name="shopping_error_name_blank">Item name is required.</string>
     <string name="shopping_error_name_too_long">Item name is too long (max %1$d characters).</string>
     <string name="shopping_error_invalid_quantity">Enter a valid quantity greater than 0 (leave blank for \"to taste\").</string>
+    <string name="action_add_to_shopping_list">Add to shopping list</string>
+    <string name="recipe_added_to_shopping_success">Ingredients added to shopping list.</string>
 
     <!-- Settings Screen -->
     <string name="settings_title">Settings</string>
